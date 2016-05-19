@@ -24,15 +24,15 @@ import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
+import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbRequest;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.hoho.android.usbserial.util.HexDump;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * A {@link CommonUsbSerialDriver} implementation for a variety of FTDI devices
@@ -152,7 +152,7 @@ public class FtdiSerialDriver extends CommonUsbSerialDriver {
      * FTDI chip types.
      */
     private static enum DeviceType {
-        TYPE_BM, TYPE_AM, TYPE_2232C, TYPE_R, TYPE_2232H, TYPE_4232H;
+        TYPE_BM, TYPE_AM, TYPE_2232C, TYPE_R, TYPE_2232H, TYPE_4232H
     }
 
     private int mInterface = 0; /* INTERFACE_ANY */
@@ -243,7 +243,16 @@ public class FtdiSerialDriver extends CommonUsbSerialDriver {
 
     @Override
     public int read(byte[] dest, int timeoutMillis) throws IOException {
-        final UsbEndpoint endpoint = mDevice.getInterface(0).getEndpoint(0);
+        final int interfaceCount = mDevice.getInterfaceCount();
+        if(interfaceCount == 0)
+            throw new IOException("No available usb interface.");
+
+        final UsbInterface usbInterface = mDevice.getInterface(0);
+        final int endpointCount = usbInterface.getEndpointCount();
+        if(endpointCount == 0)
+            throw new IOException("No available usb endpoint.");
+
+        final UsbEndpoint endpoint = usbInterface.getEndpoint(0);
 
         if (ENABLE_ASYNC_READS) {
             final int readAmt;
@@ -512,9 +521,9 @@ public class FtdiSerialDriver extends CommonUsbSerialDriver {
     public void setRTS(boolean value) throws IOException {
     }
 
-    public static Map<Integer, int[]> getSupportedDevices() {
-        final Map<Integer, int[]> supportedDevices = new LinkedHashMap<Integer, int[]>();
-        supportedDevices.put(Integer.valueOf(UsbId.VENDOR_FTDI),
+    public static SparseArray<int[]> getSupportedDevices() {
+        final SparseArray<int[]> supportedDevices = new SparseArray<int[]>(1);
+        supportedDevices.put(UsbId.VENDOR_FTDI,
                 new int[] {
                     UsbId.FTDI_FT232R,
                     UsbId.FTDI_FT231X,                    

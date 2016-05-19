@@ -47,6 +47,7 @@ public final class UsbId {
     public static final int ARDUINO_MEGA_ADK_R3 = 0x0044;
     public static final int ARDUINO_SERIAL_ADAPTER_R3 = 0x0044;
     public static final int ARDUINO_LEONARDO = 0x8036;
+    public static final int ST_ARM_PX4 = 0x0010;
     public static final int PIXHAWK = 0x0011;
 
     public static final int VENDOR_VAN_OOIJEN_TECH = 0x16c0;

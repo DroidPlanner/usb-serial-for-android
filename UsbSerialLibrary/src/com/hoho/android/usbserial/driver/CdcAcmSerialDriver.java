@@ -9,8 +9,6 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * USB CDC/ACM serial driver implementation.
@@ -263,6 +261,7 @@ public class CdcAcmSerialDriver extends CommonUsbSerialDriver {
         supportedDevices.put(UsbId.VENDOR_ARDUINO2,
                 new int[] {
                         UsbId.VAN_OOIJEN_TECH_TEENSYDUINO_SERIAL,
+                        UsbId.ST_ARM_PX4,
                         UsbId.PIXHAWK,
                 });
         return supportedDevices;

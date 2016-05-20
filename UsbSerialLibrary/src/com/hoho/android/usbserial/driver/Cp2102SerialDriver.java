@@ -6,6 +6,7 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.util.Log;
+import android.util.SparseArray;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -78,9 +79,15 @@ public class Cp2102SerialDriver extends CommonUsbSerialDriver {
                     Log.d(TAG, "claimInterface " + i + " FAIL");
                 }
             }                       
-            
-            UsbInterface dataIface = mDevice.getInterface(mDevice.getInterfaceCount() - 1);
-            for (int i = 0; i < dataIface.getEndpointCount(); i++) {
+
+            final int interfaceCount = mDevice.getInterfaceCount();
+            if(interfaceCount == 0){
+                throw new IOException("No usb interfaces to access.");
+            }
+
+            UsbInterface dataIface = mDevice.getInterface(interfaceCount - 1);
+            final int endpointCount = dataIface.getEndpointCount();
+            for (int i = 0; i < endpointCount; i++) {
                 UsbEndpoint ep = dataIface.getEndpoint(i);
                 if (ep.getType() == UsbConstants.USB_ENDPOINT_XFER_BULK) {
                     if (ep.getDirection() == UsbConstants.USB_DIR_IN) {
@@ -262,9 +269,9 @@ public class Cp2102SerialDriver extends CommonUsbSerialDriver {
     public void setRTS(boolean value) throws IOException {
     }
     
-    public static Map<Integer, int[]> getSupportedDevices() {
-        final Map<Integer, int[]> supportedDevices = new LinkedHashMap<Integer, int[]>();
-        supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SILAB),
+    public static SparseArray<int[]> getSupportedDevices() {
+        final SparseArray<int[]> supportedDevices = new SparseArray<int[]>(1);
+        supportedDevices.put(UsbId.VENDOR_SILAB,
                 new int[] {
                         UsbId.SILAB_CP2102
                 });

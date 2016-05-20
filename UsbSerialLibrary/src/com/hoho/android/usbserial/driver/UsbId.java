@@ -47,6 +47,7 @@ public final class UsbId {
     public static final int ARDUINO_MEGA_ADK_R3 = 0x0044;
     public static final int ARDUINO_SERIAL_ADAPTER_R3 = 0x0044;
     public static final int ARDUINO_LEONARDO = 0x8036;
+    public static final int ST_ARM_PX4 = 0x0010;
     public static final int PIXHAWK = 0x0011;
 
     public static final int VENDOR_VAN_OOIJEN_TECH = 0x16c0;
@@ -57,6 +58,9 @@ public final class UsbId {
     
     public static final int VENDOR_SILAB = 0x10c4;
     public static final int SILAB_CP2102 = 0xea60;
+
+    public static final int VENDOR_PROLIFIC = 0x067b;
+    public static final int PROLIFIC_PL2303 = 0x2303;
 
     private UsbId() {
         throw new IllegalAccessError("Non-instantiable class.");
